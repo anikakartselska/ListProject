@@ -1,0 +1,88 @@
+﻿<Window x:Class="ListProject.View.AllObjectsWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:ListProject.ViewModel.Converters"
+        xmlns:allObjectsWindow1="clr-namespace:ListProject.View.AllObjectsWindow"
+        mc:Ignorable="d"
+        ResizeMode="CanResize"
+        Title="MainWindow" Height="450" Width="800"
+        MinHeight="200" MinWidth="200">
+    <Window.DataContext>
+        <allObjectsWindow1:Presenter />
+    </Window.DataContext>
+    <Window.Resources>
+        <converters:VisibilityToBooleanConverter x:Key="VisibilityToBooleanConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="4*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <ContentControl Content="{Binding MyDataGrid}"
+                            VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <ContentControl Content="{Binding MyDataGrid.NoDataTextBlock}" VerticalAlignment="Center"
+                            HorizontalAlignment="Center" FontSize="20"/>
+        </Grid>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="2">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <GroupBox Header="Select Columns" VerticalAlignment="Center"
+                              HorizontalAlignment="Left" BorderBrush="Black">
+                        <ItemsControl ItemsSource="{Binding MyDataGrid.Columns}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding Header}"
+                                              IsChecked="{Binding MyVisibility,Mode=TwoWay,Converter={StaticResource VisibilityToBooleanConverter}}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <GroupBox.Style>
+                            <Style TargetType="GroupBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding MyDataGrid.Columns}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </GroupBox.Style>
+                    </GroupBox>
+                </ScrollViewer>
+            </Grid>
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <Grid>
+                    <GroupBox Header="Select Object Type" VerticalAlignment="Center"
+                              HorizontalAlignment="Right" BorderBrush="Black">
+                        <ListBox ItemsSource="{Binding Types}"
+                                 SelectedItem="{Binding SelectedType}" Width="77">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </GroupBox>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="2" Content="Clear" Command="{Binding ClearListAndSelection}"
+                    VerticalAlignment="Center" Width="70" HorizontalAlignment="Center" />
+            <Button Grid.Column="0" Content="Go Back" Command="{Binding GoBackToStartScreen}"
+                    VerticalAlignment="Center" Width="70" HorizontalAlignment="Center" />
+        </Grid>
+    </Grid>
+</Window>

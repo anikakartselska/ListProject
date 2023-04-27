@@ -1,0 +1,19 @@
+﻿<Window x:Class="ListProject.View.SingleObjectWindow.ObjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ListProject"
+        xmlns:viewModel="clr-namespace:ListProject.ViewModel"
+        mc:Ignorable="d"
+        Title="ObjectWindow" Height="450" Width="800">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <GroupBox Header="Selected Object" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Black">
+            <StackPanel>
+                <ContentControl Content="{Binding StackPanel}" />
+            </StackPanel>
+            </GroupBox>
+        </ScrollViewer>
+    </Grid>
+</Window>
