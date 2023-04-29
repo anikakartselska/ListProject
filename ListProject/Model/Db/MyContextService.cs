@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ListProject.Model
+namespace ListProject.Model.Db
 {
     public class MyContextService
     {
-        public List<dynamic> GetEntitiesListFromDatabaseByType(Type entityType)
+        public List<dynamic> GetEntitiesListFromDatabaseByType(Type? entityType)
         {
             Type myObjectContextType = typeof(MyObjectsContext<>).MakeGenericType(entityType);
 
             dynamic myObjectContext = Activator.CreateInstance(myObjectContextType);
-            PropertyInfo entitiesProperty = myObjectContextType.GetProperty("Entities");
+            PropertyInfo entitiesProperty = myObjectContextType.GetProperty("Entities") ?? throw new InvalidOperationException();
             object genericDbSet = entitiesProperty?.GetValue(myObjectContext, null);
             MethodInfo toListMethod = typeof(Enumerable).GetMethod("ToList")?.MakeGenericMethod(entityType);
             object entitiesList = toListMethod?.Invoke(null, new[] { genericDbSet });

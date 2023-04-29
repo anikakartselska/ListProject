@@ -8,7 +8,7 @@ namespace ListProject.ViewModel.Utils
     {
         private Visibility _myVisibility = Visibility.Visible;
 
-        public event EventHandler ColumnVisibilityChanged;
+        public event EventHandler? ColumnVisibilityChanged;
 
         public Visibility MyVisibility
         {

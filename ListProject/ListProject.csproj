@@ -18,6 +18,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <LangVersion>8</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -73,7 +74,6 @@
     <Compile Include="Model\Entities\Car.cs" />
     <Compile Include="Model\Entities\Entity.cs" />
     <Compile Include="Model\Entities\Person.cs" />
-    <Compile Include="Model\Entities\User.cs" />
     <Compile Include="Model\Generics\GenericCollectionHandler.cs" />
     <Compile Include="ViewModel\Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="ViewModel\Utils\CustomDataGrid.cs" />

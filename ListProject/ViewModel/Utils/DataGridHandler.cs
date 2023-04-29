@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using ListProject.View.SingleObjectWindow;
@@ -17,65 +14,74 @@ namespace ListProject.ViewModel.Utils
 {
     public class DataGridHandler : ObservableObject
     {
-        public static bool testMode;
-        public CustomDataGrid myDataGrid;
+        private CustomDataGrid? _myDataGrid;
+        private List<string>? _propertiesToBeVisualized;
 
-        public CustomDataGrid CreateDataGridFromGenericObjects(ObservableCollection<dynamic> objects,
-            List<string>? propertyNamesToBeVisualized)
+        public CustomDataGrid? MyDataGrid
         {
-            myDataGrid = new CustomDataGrid();
-            myDataGrid.AutoGenerateColumns = false;
+            get => _myDataGrid;
+            set => _myDataGrid = value;
+        }
 
-            (objects[0].GetType() as Type).GetProperties()
-                .OrderByDescending(x => x.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
-                .Where(x =>
-                {
-                    return propertyNamesToBeVisualized?.Contains(x.Name, StringComparer.OrdinalIgnoreCase) ?? true;
-                })
+        public List<string>? PropertiesToBeVisualized
+        {
+            get => _propertiesToBeVisualized;
+            set => _propertiesToBeVisualized = value;
+        }
+
+        public CustomDataGrid? CreateDataGridFromGenericObjects(ObservableCollection<dynamic>? objects,
+            List<string>? propertiesToBeVisualized)
+        {
+            MyDataGrid = new CustomDataGrid();
+            MyDataGrid.AutoGenerateColumns = false;
+            PropertiesToBeVisualized = (propertiesToBeVisualized ??
+                                           (objects?[0].GetType() as Type)?.GetProperties()
+                                           .Select(property => property.Name)!)
+                .OrderByDescending(propertyName => propertyName.Equals("Id", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            PropertiesToBeVisualized
                 .ToList().ForEach(propertyInfo =>
                     {
-                        if (testMode || !propertyInfo.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var column = GenerateColumnFromPropertyInfo(propertyInfo);
-                            myDataGrid.Columns.Add(column);
-                        }
+                        var column = GenerateColumnFromPropertyInfo(propertyInfo);
+                        MyDataGrid.Columns.Add(column);
                     }
                 );
-            
-            myDataGrid.ItemsSource = objects;
+
+            MyDataGrid.ItemsSource = objects;
             CheckIfDataGridHasColumnsAndRows();
             PutRowStyleOnDataGridOnMouseOver();
-            myDataGrid.PreviewMouseLeftButtonDown += MyDataGrid_PreviewMouseLeftButtonDown;
-            return myDataGrid;
+            MyDataGrid.PreviewMouseLeftButtonDown += MyDataGrid_PreviewMouseLeftButtonDown;
+            return MyDataGrid;
         }
 
         private void CheckIfDataGridHasColumnsAndRows()
         {
-            if (myDataGrid.Items.Count == 0 || myDataGrid.Columns.Count == 0)
+            if (MyDataGrid != null && (MyDataGrid.Items.Count == 0 || MyDataGrid.Columns.Count == 0))
             {
-                myDataGrid.NoDataTextBlock.Visibility = Visibility.Visible;
+                MyDataGrid.NoDataTextBlock.Visibility = Visibility.Visible;
             }
             else
             {
-                myDataGrid.NoDataTextBlock.Visibility = Visibility.Hidden;
+                MyDataGrid!.NoDataTextBlock.Visibility = Visibility.Hidden;
             }
         }
 
         private void PutRowStyleOnDataGridOnMouseOver()
         {
             Style rowStyle = new Style(typeof(DataGridRow));
-            Trigger mouseOverTrigger = new Trigger() { Property = DataGridRow.IsMouseOverProperty, Value = true };
-            mouseOverTrigger.Setters.Add(new Setter(DataGridRow.BackgroundProperty, Brushes.LightBlue));
-            mouseOverTrigger.Setters.Add(new Setter(DataGridRow.ForegroundProperty, Brushes.White));
+            Trigger mouseOverTrigger = new Trigger() { Property = UIElement.IsMouseOverProperty, Value = true };
+            mouseOverTrigger.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.LightBlue));
+            mouseOverTrigger.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.White));
             rowStyle.Triggers.Add(mouseOverTrigger);
-            myDataGrid.RowStyle = rowStyle;
+            MyDataGrid!.RowStyle = rowStyle;
         }
 
-        private CustomDataGridColumn GenerateColumnFromPropertyInfo(PropertyInfo propertyInfo)
+        private CustomDataGridColumn GenerateColumnFromPropertyInfo(string propertyName)
         {
             CustomDataGridColumn column = new CustomDataGridColumn();
-            column.Header = propertyInfo.Name;
-            column.Binding = new Binding(propertyInfo.Name);
+            column.Header = propertyName;
+            column.Binding = new Binding(propertyName);
             column.MyVisibility = Visibility.Visible;
             column.Width = DataGridLength.Auto;
             column.ColumnVisibilityChanged += OnColumnVisibilityChange;
@@ -85,65 +91,57 @@ namespace ListProject.ViewModel.Utils
 
         private void OnColumnVisibilityChange(object sender, EventArgs e)
         {
-            foreach (var dataGridColumn in myDataGrid.Columns)
+            foreach (var dataGridColumn in MyDataGrid?.Columns!)
             {
-                if ((dataGridColumn as CustomDataGridColumn).MyVisibility == Visibility.Visible)
+                if ((dataGridColumn as CustomDataGridColumn)!.MyVisibility == Visibility.Visible)
                 {
-                    if (myDataGrid.Visibility != Visibility.Visible)
+                    if (MyDataGrid.Visibility != Visibility.Visible)
                     {
-                        myDataGrid.Visibility = Visibility.Visible;
-                        myDataGrid.NoDataTextBlock.Visibility = Visibility.Hidden;
-                        RaisePropertyChangedEvent(myDataGrid.Name);
+                        MyDataGrid.Visibility = Visibility.Visible;
+                        MyDataGrid.NoDataTextBlock.Visibility = Visibility.Hidden;
+                        RaisePropertyChangedEvent(MyDataGrid.Name);
                     }
 
                     return;
                 }
             }
 
-            if (myDataGrid.Visibility != Visibility.Hidden)
+            if (MyDataGrid.Visibility != Visibility.Hidden)
             {
-                myDataGrid.Visibility = Visibility.Hidden;
-                RaisePropertyChangedEvent(myDataGrid.Name);
-                myDataGrid.NoDataTextBlock.Visibility = Visibility.Visible;
+                MyDataGrid.Visibility = Visibility.Hidden;
+                RaisePropertyChangedEvent(MyDataGrid.Name);
+                MyDataGrid.NoDataTextBlock.Visibility = Visibility.Visible;
             }
         }
 
         private void MyDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Get the clicked visual element
             var element = e.OriginalSource as FrameworkElement;
 
-            // Navigate up the visual tree to find the clicked row
             while (element != null && !(element is DataGridRow))
             {
                 element = VisualTreeHelper.GetParent(element) as FrameworkElement;
             }
 
-            // If a row was clicked, handle the event
-            if (element is DataGridRow)
+
+            if (element != null)
             {
                 var row = (DataGridRow)element;
                 var item = row.DataContext;
-                // Get the type of the clicked row's data item
-                Type itemType = item.GetType();
 
-                // Construct the generic type of the SingleObjectPresenter class
-                Type presenterType = typeof(SingleObjectPresenter<>).MakeGenericType(itemType);
+                SingleObjectPresenter singleObjectPresenter =
+                    new SingleObjectPresenter(item, PropertiesToBeVisualized!);
 
-                // Create an instance of the SingleObjectPresenter class with the correct generic type
-                object presenter = Activator.CreateInstance(presenterType, item, testMode);
                 foreach (Window window in Application.Current.Windows)
                 {
-                    // Check if the window is of the same type as the current window
                     if (window.GetType() == typeof(ObjectWindow))
                     {
-                        // Close the window
                         window.Close();
                     }
                 }
 
                 ObjectWindow objectWindow = new ObjectWindow();
-                objectWindow.DataContext = presenter;
+                objectWindow.DataContext = singleObjectPresenter;
                 objectWindow.Show();
             }
         }

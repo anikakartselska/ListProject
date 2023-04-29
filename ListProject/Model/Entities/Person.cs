@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ListProject.Model
+namespace ListProject.Model.Entities
 {
     public class Person:Entity
     {

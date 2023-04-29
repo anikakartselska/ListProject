@@ -9,16 +9,18 @@ namespace ListProject.View.StartWindow
     {
         public ICommand YesClick => new DelegateCommand(() =>
         {
-            DataGridHandler.testMode = true;
             Window window = new MainWindow();
+            Presenter presenter = new Presenter(true);
+            window.DataContext = presenter;
             Application.Current.Windows[0]?.Close();
             window.Show();
         });
 
         public ICommand NoClick => new DelegateCommand(() =>
         {
-            DataGridHandler.testMode = false;
             Window window = new MainWindow();
+            Presenter presenter = new Presenter();
+            window.DataContext = presenter;
             Application.Current.Windows[0]?.Close();
             window.Show();
         });

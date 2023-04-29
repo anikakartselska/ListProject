@@ -7,11 +7,11 @@ namespace ListProject.View.AllObjectsWindow
 {
     public class BasePresenter : ObservableObject
     {
-        private ObservableCollection<dynamic> _objects;
-        private CustomDataGrid _myDataGrid;
-        private List<string> _propertyNamesToBeVisualized;
+        private ObservableCollection<dynamic>? _objects;
+        private CustomDataGrid? _myDataGrid;
+        private List<string>? _propertiesToBeVisualized;
 
-        public CustomDataGrid MyDataGrid
+        public CustomDataGrid? MyDataGrid
         {
             get => _myDataGrid;
             set
@@ -21,28 +21,32 @@ namespace ListProject.View.AllObjectsWindow
             }
         }
 
-        public List<string> PropertyNamesToBeVisualized
+        public List<string>? PropertiesBeVisualized
         {
-            get => _propertyNamesToBeVisualized;
-            set => _propertyNamesToBeVisualized = value;
+            get => _propertiesToBeVisualized;
+            set
+            {
+                _propertiesToBeVisualized = value;
+                RaisePropertyChangedEvent(nameof(PropertiesBeVisualized));
+            }
         }
 
-        public ObservableCollection<dynamic> Objects
+        public ObservableCollection<dynamic>? Objects
         {
             get => _objects;
             set
             {
                 _objects = value;
                 RaisePropertyChangedEvent(nameof(Objects));
-                MyDataGrid = new DataGridHandler().CreateDataGridFromGenericObjects(_objects,null);
+                MyDataGrid = new DataGridHandler().CreateDataGridFromGenericObjects(_objects,PropertiesBeVisualized);
             }
         }
 
-        public BasePresenter(ObservableCollection<dynamic> objects,List<string>? propertyNamesToBeVisualized)
+        public BasePresenter(ObservableCollection<dynamic>? objects,List<string> propertiesToBeVisualized)
         {
-            _objects = objects;
-            _propertyNamesToBeVisualized = propertyNamesToBeVisualized;
-            _myDataGrid = new DataGridHandler().CreateDataGridFromGenericObjects(Objects,propertyNamesToBeVisualized);
+            Objects = objects;
+            PropertiesBeVisualized = propertiesToBeVisualized;
+            MyDataGrid = new DataGridHandler().CreateDataGridFromGenericObjects(Objects,propertiesToBeVisualized);
         }
 
         public BasePresenter()
