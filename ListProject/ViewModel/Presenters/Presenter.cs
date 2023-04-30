@@ -10,7 +10,7 @@ using ListProject.Model.Entities;
 using ListProject.View.StartWindow;
 using ListProject.ViewModel.Utils;
 
-namespace ListProject.View.AllObjectsWindow
+namespace ListProject.ViewModel.Presenters
 {
     public class Presenter : BasePresenter
     {

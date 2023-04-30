@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ListProject.View.SingleObjectWindow;
+using ListProject.ViewModel.Presenters;
 using Application = System.Windows.Application;
 using Binding = System.Windows.Data.Binding;
 

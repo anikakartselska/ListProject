@@ -74,8 +74,10 @@
     <Compile Include="Model\Entities\Car.cs" />
     <Compile Include="Model\Entities\Entity.cs" />
     <Compile Include="Model\Entities\Person.cs" />
-    <Compile Include="Model\Generics\GenericCollectionHandler.cs" />
     <Compile Include="ViewModel\Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="ViewModel\Presenters\BasePresenter.cs" />
+    <Compile Include="ViewModel\Presenters\Presenter.cs" />
+    <Compile Include="ViewModel\Presenters\SingleObjectPresenter.cs" />
     <Compile Include="ViewModel\Utils\CustomDataGrid.cs" />
     <Compile Include="ViewModel\Utils\CustomDataGridColumn.cs" />
     <Compile Include="ViewModel\Utils\DataGridHandler.cs" />
@@ -85,16 +87,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\AllObjectsWindow\BasePresenter.cs" />
     <Compile Include="View\AllObjectsWindow\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="View\AllObjectsWindow\Presenter.cs" />
     <Compile Include="View\SingleObjectWindow\ObjectWindow.xaml.cs">
       <DependentUpon>ObjectWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SingleObjectWindow\SingleObjectPresenter.cs" />
     <Compile Include="View\StartWindow\StartScreen.xaml.cs">
       <DependentUpon>StartScreen.xaml</DependentUpon>
     </Compile>

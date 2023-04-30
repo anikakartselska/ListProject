@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ListProject.ViewModel.Utils;
 
-namespace ListProject.View.AllObjectsWindow
+namespace ListProject.ViewModel.Presenters
 {
     public class BasePresenter : ObservableObject
     {

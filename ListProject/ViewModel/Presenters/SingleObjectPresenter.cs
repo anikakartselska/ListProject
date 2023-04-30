@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace ListProject.View.SingleObjectWindow
+namespace ListProject.ViewModel.Presenters
 {
     public class SingleObjectPresenter
     {
