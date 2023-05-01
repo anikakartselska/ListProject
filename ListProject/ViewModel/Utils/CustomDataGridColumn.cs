@@ -6,19 +6,16 @@ namespace ListProject.ViewModel.Utils
 {
     public class CustomDataGridColumn : DataGridTextColumn
     {
-        private Visibility _myVisibility = Visibility.Visible;
-
         public event EventHandler? ColumnVisibilityChanged;
 
         public Visibility MyVisibility
         {
-            get { return _myVisibility; }
+            get { return Visibility; }
             set
             {
-                if (_myVisibility != value)
+                if (Visibility != value)
                 {
-                    this.Visibility = value;
-                    _myVisibility = value;
+                    Visibility = value;
                     OnColumnVisibilityChanged();
                 }
             }
