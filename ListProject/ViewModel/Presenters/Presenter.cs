@@ -15,7 +15,7 @@ namespace ListProject.ViewModel.Presenters
     public class Presenter : BasePresenter
     {
         private List<Type> _types;
-        private Type? _selectedType;
+        private Type _selectedType;
         private bool _testMode;
 
         public bool TestMode
@@ -24,14 +24,14 @@ namespace ListProject.ViewModel.Presenters
             set => _testMode = value;
         }
 
-        public Type? SelectedType
+        public Type SelectedType
         {
             get => _selectedType;
             set
             {
                 _selectedType = value;
                 RaisePropertyChangedEvent(nameof(SelectedType));
-                OnSelectedItemChanged(_selectedType);
+                OnSelectedItemChanged(SelectedType);
             }
         }
 
@@ -45,12 +45,12 @@ namespace ListProject.ViewModel.Presenters
         {
             if (entityType != null)
             {
-                var dynamicEntitiesList = new MyContextService().GetEntitiesListFromDatabaseByType(entityType);
-                if (!TestMode)
-                {
-                    PropertiesBeVisualized = FilterIdPropertyAndGetObjectPropertyNames(entityType);
-                }
-                Objects = new ObservableCollection<dynamic>(dynamicEntitiesList);
+                var dynamicEntitiesList =
+                    new ObservableCollection<dynamic>(
+                        new MyContextService().GetEntitiesListFromDatabaseByType(entityType));
+
+                SetObjectsAndPropertiesAndChangeDataGrid(dynamicEntitiesList,
+                    FilterIdPropertyAndGetObjectPropertyNames(entityType, TestMode));
             }
         }
 
@@ -83,12 +83,12 @@ namespace ListProject.ViewModel.Presenters
             return assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(Entity))).ToList();
         }
 
-        private List<string> FilterIdPropertyAndGetObjectPropertyNames(Type? entityType)
+        private List<string> FilterIdPropertyAndGetObjectPropertyNames(Type entityType, bool testMode)
         {
-            return entityType?.GetProperties()
-                .Where(x => !x.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
+            return entityType.GetProperties()
+                .Where(x => testMode || !x.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
                 .Select(info => info.Name)
-                .ToList() ?? new List<string>();
+                .ToList();
         }
     }
 }

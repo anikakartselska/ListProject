@@ -5,9 +5,9 @@ namespace ListProject.ViewModel.Presenters
 {
     public class SingleObjectPresenter
     {
-        private StackPanel? _myStackPanel;
+        private StackPanel _myStackPanel;
 
-        public StackPanel? MyStackPanel
+        public StackPanel MyStackPanel
         {
             get => _myStackPanel;
             set => _myStackPanel = value;

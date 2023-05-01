@@ -15,30 +15,28 @@ namespace ListProject.ViewModel.Utils
 {
     public class DataGridHandler : ObservableObject
     {
-        private CustomDataGrid? _myDataGrid;
-        private List<string>? _propertiesToBeVisualized;
+        private CustomDataGrid _myDataGrid;
+        private List<string> _propertiesToBeVisualized;
 
-        public CustomDataGrid? MyDataGrid
+        public CustomDataGrid MyDataGrid
         {
             get => _myDataGrid;
             set => _myDataGrid = value;
         }
 
-        public List<string>? PropertiesToBeVisualized
+        public List<string> PropertiesToBeVisualized
         {
             get => _propertiesToBeVisualized;
             set => _propertiesToBeVisualized = value;
         }
 
-        public CustomDataGrid? CreateDataGridFromGenericObjects(ObservableCollection<dynamic>? objects,
-            List<string>? propertiesToBeVisualized)
+        public CustomDataGrid CreateDataGridFromGenericObjects(ObservableCollection<dynamic> objects,
+            List<string> propertiesToBeVisualized)
         {
             MyDataGrid = new CustomDataGrid();
             MyDataGrid.AutoGenerateColumns = false;
-            PropertiesToBeVisualized = (propertiesToBeVisualized ??
-                                           (objects?[0].GetType() as Type)?.GetProperties()
-                                           .Select(property => property.Name)!)
-                .OrderByDescending(propertyName => propertyName.Equals("Id", StringComparison.OrdinalIgnoreCase))
+            PropertiesToBeVisualized = propertiesToBeVisualized.OrderByDescending(propertyName =>
+                    propertyName.Equals("Id", StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             PropertiesToBeVisualized
@@ -58,24 +56,26 @@ namespace ListProject.ViewModel.Utils
 
         private void CheckIfDataGridHasColumnsAndRows()
         {
-            if (MyDataGrid != null && (MyDataGrid.Items.Count == 0 || MyDataGrid.Columns.Count == 0))
+            if (MyDataGrid.Items.Count == 0 || MyDataGrid.Columns.Count == 0)
             {
+                MyDataGrid.Visibility = Visibility.Hidden;
                 MyDataGrid.NoDataTextBlock.Visibility = Visibility.Visible;
             }
             else
             {
-                MyDataGrid!.NoDataTextBlock.Visibility = Visibility.Hidden;
+                MyDataGrid.Visibility = Visibility.Visible;
+                MyDataGrid.NoDataTextBlock.Visibility = Visibility.Hidden;
             }
         }
 
         private void PutRowStyleOnDataGridOnMouseOver()
         {
             Style rowStyle = new Style(typeof(DataGridRow));
-            Trigger mouseOverTrigger = new Trigger() { Property = UIElement.IsMouseOverProperty, Value = true };
+            Trigger mouseOverTrigger = new Trigger { Property = UIElement.IsMouseOverProperty, Value = true };
             mouseOverTrigger.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.LightBlue));
             mouseOverTrigger.Setters.Add(new Setter(Control.ForegroundProperty, Brushes.White));
             rowStyle.Triggers.Add(mouseOverTrigger);
-            MyDataGrid!.RowStyle = rowStyle;
+            MyDataGrid.RowStyle = rowStyle;
         }
 
         private CustomDataGridColumn GenerateColumnFromPropertyInfo(string propertyName)
@@ -92,7 +92,7 @@ namespace ListProject.ViewModel.Utils
 
         private void OnColumnVisibilityChange(object sender, EventArgs e)
         {
-            foreach (var dataGridColumn in MyDataGrid?.Columns!)
+            foreach (var dataGridColumn in MyDataGrid.Columns)
             {
                 if ((dataGridColumn as CustomDataGridColumn)!.MyVisibility == Visibility.Visible)
                 {
@@ -124,14 +124,13 @@ namespace ListProject.ViewModel.Utils
                 element = VisualTreeHelper.GetParent(element) as FrameworkElement;
             }
 
-
             if (element != null)
             {
                 var row = (DataGridRow)element;
                 var item = row.DataContext;
 
                 SingleObjectPresenter singleObjectPresenter =
-                    new SingleObjectPresenter(item, PropertiesToBeVisualized!);
+                    new SingleObjectPresenter(item, PropertiesToBeVisualized);
 
                 foreach (Window window in Application.Current.Windows)
                 {
