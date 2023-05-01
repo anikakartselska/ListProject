@@ -130,7 +130,7 @@ namespace ListProject.ViewModel.Utils
                 var item = row.DataContext;
 
                 SingleObjectPresenter singleObjectPresenter =
-                    new SingleObjectPresenter(item, PropertiesToBeVisualized);
+                    new SingleObjectPresenter(item);
 
                 foreach (Window window in Application.Current.Windows)
                 {
