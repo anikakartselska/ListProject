@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace ListProject.ViewModel.Presenters
 {
@@ -15,8 +16,12 @@ namespace ListProject.ViewModel.Presenters
 
         public SingleObjectPresenter(dynamic obj, List<string> propertiesToBeVisualized)
         {
-            MyStackPanel = new StackPanel();
+            MyStackPanel = CreateStackPanel(obj, propertiesToBeVisualized);
+        }
 
+        private StackPanel CreateStackPanel(dynamic obj, List<string> propertiesToBeVisualized)
+        {
+            StackPanel panel = new StackPanel();
             propertiesToBeVisualized
                 .ForEach(property =>
                     {
@@ -27,9 +32,10 @@ namespace ListProject.ViewModel.Presenters
                         propertyStackPanel.Orientation = Orientation.Horizontal;
                         propertyStackPanel.Children.Add(label);
 
-                        MyStackPanel.Children.Add(propertyStackPanel);
+                        panel.Children.Add(propertyStackPanel);
                     }
                 );
+            return panel;
         }
     }
 }

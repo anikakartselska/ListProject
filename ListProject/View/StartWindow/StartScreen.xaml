@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:startWindow1="clr-namespace:ListProject.View.StartWindow"
+        xmlns:startWindow="clr-namespace:ListProject.View.StartWindow"
         mc:Ignorable="d"
         Title="StartScreen" Height="450" Width="800" MinHeight="150" MinWidth="210">
     <Window.DataContext>
-        <startWindow1:StartWindowCommands />
+        <startWindow:StartWindowCommands />
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>

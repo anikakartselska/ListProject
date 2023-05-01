@@ -78,6 +78,7 @@
     <Compile Include="ViewModel\Presenters\BasePresenter.cs" />
     <Compile Include="ViewModel\Presenters\Presenter.cs" />
     <Compile Include="ViewModel\Presenters\SingleObjectPresenter.cs" />
+    <Compile Include="ViewModel\Presenters\StartWindowCommands.cs" />
     <Compile Include="ViewModel\Utils\CustomDataGrid.cs" />
     <Compile Include="ViewModel\Utils\CustomDataGridColumn.cs" />
     <Compile Include="ViewModel\Utils\DataGridHandler.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="View\StartWindow\StartScreen.xaml.cs">
       <DependentUpon>StartScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\StartWindow\StartWindowCommands.cs" />
     <Page Include="View\AllObjectsWindow\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
