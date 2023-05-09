@@ -1,6 +1,8 @@
 ﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ListProject.ViewModel.Utils;
 
 namespace ListProject.ViewModel.Presenters
@@ -40,22 +42,23 @@ namespace ListProject.ViewModel.Presenters
                 RaisePropertyChangedEvent(nameof(Objects));
             }
         }
-        
-        public BasePresenter(ObservableCollection<dynamic> objects,List<string> propertiesToBeVisualized)
+
+        public BasePresenter(ObservableCollection<dynamic> objects, List<string>? propertiesToBeVisualized)
         {
-            SetObjectsAndPropertiesAndChangeDataGrid(objects,propertiesToBeVisualized);
+            SetObjectsAndPropertiesAndChangeDataGrid(objects, propertiesToBeVisualized);
         }
 
         public BasePresenter()
         {
         }
-        
+
         public void SetObjectsAndPropertiesAndChangeDataGrid(ObservableCollection<dynamic> objects,
-            List<string> propertiesToBeVisualized)
+            List<string>? propertiesToBeVisualized)
         {
             Objects = objects;
-            PropertiesBeVisualized = propertiesToBeVisualized;
-            MyDataGrid = new DataGridHandler().CreateDataGridFromGenericObjects(Objects,propertiesToBeVisualized);
+            PropertiesBeVisualized = propertiesToBeVisualized ??
+                                     (objects[0].GetType() as Type).GetProperties().Select(info => info.Name).ToList();
+            MyDataGrid = new DataGridHandler().CreateDataGridFromGenericObjects(Objects, PropertiesBeVisualized);
         }
     }
 }

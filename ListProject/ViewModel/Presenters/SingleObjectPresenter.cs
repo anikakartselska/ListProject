@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -22,11 +23,11 @@ namespace ListProject.ViewModel.Presenters
         private StackPanel CreateStackPanel(dynamic obj)
         {
             StackPanel panel = new StackPanel();
-            panel.GetType().GetProperties().ToList()
+            (obj.GetType() as Type).GetProperties().ToList()
                 .ForEach(property =>
                     {
                         Label label = new Label();
-                        label.Content = property + ":" + obj.GetType().GetProperty(property).GetValue(obj);
+                        label.Content = property.Name + ":" + property.GetValue(obj).ToString();
 
                         StackPanel propertyStackPanel = new StackPanel();
                         propertyStackPanel.Orientation = Orientation.Horizontal;
